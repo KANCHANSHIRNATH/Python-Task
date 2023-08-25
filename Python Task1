@@ -1,0 +1,64 @@
+"""1) Create a directory
+2) Create 10 text files and write some data in all text files at a time
+3) Read all the data from this dir/file print in consol
+4) Hold on the data in a list
+5) Write all the dtaa in a new line from list
+6) Keep only a new file in present directory and move rest in new directory"""
+
+
+import os
+import random
+import string
+import shutil
+
+base_directory = r"C:\Python\Code"
+
+# Create a directory for text files
+text_files_directory = os.path.join(base_directory, "text_files")
+if not os.path.exists(text_files_directory):
+    os.makedirs(text_files_directory)
+
+# Create 10 text files and write random data
+file_paths = []
+for i in range(1, 11):
+    file_path = os.path.join(text_files_directory, f"file{i}.txt")
+    with open(file_path, "w") as file:
+        random_text = "<p>" + "".join(random.choices(string.ascii_letters + string.digits, k=100)) + "</p>"
+        file.write(random_text)
+    file_paths.append(file_path)
+
+# Read data from files and store in a list
+data_list = []
+for file_path in file_paths:
+    with open(file_path, "r") as file:
+        data = file.read()
+        data_list.append(data)
+
+# Print data from list
+for data in data_list:
+    print(data)
+
+# Write data from list to a new file
+combined_file_path = os.path.join(base_directory, "combined_data.txt")
+with open(combined_file_path, "w") as combined_file:
+    combined_file.write("\n".join(data_list))
+
+# Create a new directory
+new_directory = os.path.join(base_directory, "new_directory")
+if not os.path.exists(new_directory):
+    os.makedirs(new_directory)
+
+# Move files to the new directory
+for file_path in file_paths:
+    new_file_path = os.path.join(new_directory, os.path.basename(file_path))
+    shutil.move(file_path, new_file_path)
+
+# Keep only a new line in the current directory
+new_line_file_path = os.path.join(base_directory, "new_line.txt")
+with open(new_line_file_path, "w") as new_line_file:
+    new_line_file.write("\n")
+
+# Print confirmation messages
+print("\nFiles moved to 'new_directory'")
+print(f"Created 'new_line.txt' with a new line in {base_directory}")
+
